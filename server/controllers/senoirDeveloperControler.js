@@ -1,6 +1,8 @@
 import Application from "../models/Application.js"
 import Programmer from "../models/Programmer.js"
 import Task from "../models/Task.js"
+import Update from "../models/Update.js"
+import NewFunction from "../models/NewFunction.js"
 
 
 export const getAllProgrammer = async (req,res) => {
@@ -82,7 +84,7 @@ export const takeApplication = async (req, res)=>{
         })
     }
 }
-
+ 
 
 export const addTask = async (req,res) => {
     try {
@@ -92,7 +94,7 @@ export const addTask = async (req,res) => {
             statusTask: "Не просмотрено",
             executor: req.body.executor, // тот кто выполняет задачу 
             responsible: req.employeeId, // ответственный за выполнение заявки
-            aplication: req.params.idApplication, // заявка, к которой относиться задача
+            aplication: req.params.idApplication, // заявка/функция, к которой относиться задача
             deadline: req.body.deadline,
         }
 
@@ -195,6 +197,149 @@ export const getAllTasksForProgrammer = async (req, res) => {
 }
 
 
+
+
+export const addUpdate = async (req,res) => {
+    try {
+        const newUpdate = {
+            title: req.body.title,
+            description: req.body.description,
+            responsible: req.employeeId, // ответственный за выполнение заявки
+            application: req.body.application
+        }
+
+        const doc = new Update(newUpdate)
+        await doc.save()
+
+        return res.status(200).json({
+            "message" : "success",
+            "newTask" : doc
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            "error": error.errmsg,
+            "message": "Ошибка добавления задачи"
+        })
+    }
+}
+
+
+export const addNewFunction = async (req,res) => {
+    try {
+        const NewFunctionData = {
+            title: req.body.title,
+            description: req.body.description,
+            responsible: req.employeeId,
+            status: "Активно"
+        }
+
+        const doc = new NewFunction(NewFunctionData)
+        await doc.save()
+
+        return res.status(200).json({
+            "message" : "success", 
+            "newTask" : doc
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            "error": error.errmsg,
+            "message": "Ошибка добавления задачи"
+        })
+    }
+}
+
+
+export const getNewFunction = async (req,res) => {
+    try {
+        const allNewFunction = await NewFunction.find({
+            responsible: req.employeeId
+        })
+        
+
+
+        return res.status(200).json({
+            "message" : "success", 
+            "allFunction" : allNewFunction
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            "error": error.errmsg,
+            "message": "Ошибка добавления задачи"
+        })
+    }
+}
+
+
+export const getOneFunction = async (req,res) => {
+    try {
+        const oneFunction = await NewFunction.find({
+            "_id": req.params.idFunction
+        })
+        
+        return res.status(200).json({
+            "message" : "success",
+            "oneFunction": oneFunction
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            "error": error.errmsg,
+            "message": "Ошибка получения заявки"
+        })
+    }
+}
+
+export const getAllUpdate = async (req,res) => {
+    try {
+        let allUpdates = []
+        if (req.body.developer) {
+            allUpdates = await Update.find({
+                responsible: req.employeeId
+            })
+        } else {
+            allUpdates = await Update.find()
+        }
+
+        return res.status(200).json({
+            "message" : "success",
+            "allProgrammer": allUpdates
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            "error": error.errmsg,
+            "message": "Ошибка получения списка программистов"
+        })
+    }
+} 
+
+
+export const getOneUpdate = async (req,res) => {
+    try {
+        let allUpdates = []
+        if (req.body.developer) {
+            allUpdates = await Update.find({
+                application: req.body.application
+            })
+        } else {
+            allUpdates = await Update.find()
+        }
+
+        return res.status(200).json({
+            "message" : "success",
+            "allProgrammer": allUpdates
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            "error": error.errmsg,
+            "message": "Ошибка получения списка программистов"
+        })
+    }
+} 
 
 // Назначение исполнителя
 // export const executeAppliaction = async (req,res) => {

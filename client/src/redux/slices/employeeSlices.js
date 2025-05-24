@@ -6,8 +6,10 @@ export const fetchSendApplication = createAsyncThunk("/fetch/employee/send", asy
     return data;
 });
 
+
 export const fetchAllApplication = createAsyncThunk("/fetch/employee/application/all", async () => {
     const { data } = await axios.get("/employee/application/all");
+    
     return data;
 });
 

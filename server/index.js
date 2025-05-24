@@ -6,8 +6,13 @@ import {checkAuthorization} from './utilites/checkAuth.js';
 import { sendApplications, getAllApplicationsEmployee, getOneApplication, setStatusApplication } from './controllers/applicationControlers.js';
 import { getAllApplicationsSenior, getAllProgrammer, takeApplication,getActiveApplication, addTask, patchTask, deleteTask } from './controllers/senoirDeveloperControler.js';
 import { addDepartament, addJobTitle } from './controllers/PersonnelDepartment.js';
+import { addUpdate, addNewFunction } from './controllers/senoirDeveloperControler.js';
 import { getAllDepartemnt, getDepartmentPositions } from './controllers/PersonnelDepartment.js';
 import dbMongo from './config/db.js';
+import { getOneUpdate } from './controllers/senoirDeveloperControler.js';
+import { getOneFunction } from './controllers/senoirDeveloperControler.js';
+import { getNewFunction } from './controllers/senoirDeveloperControler.js';
+import { getAllUpdate } from './controllers/senoirDeveloperControler.js';
 import cors from 'cors';
 import { getAllTasksForSenior, getAllTasksForProgrammer } from './controllers/senoirDeveloperControler.js';
 
@@ -97,6 +102,26 @@ app.get('/senior/programmer/all/task', checkAuthorization, getAllTasksForProgram
 
 // Удалить задачу заявки
 app.delete('/senior/developer/task/:idTask',checkAuthorization,deleteTask)
+
+// Добавление обновления
+app.post("/senior/developer/add/update", checkAuthorization, addUpdate)
+
+// отображение обновлений
+app.post("/senior/developer/get/update", checkAuthorization, getAllUpdate)
+
+// Получить одно обновление
+app.post("/senior/developer/get/one/update", checkAuthorization, getOneUpdate)
+
+
+
+// Добавление новой функции
+app.post("/senior/developer/add/function", checkAuthorization, addNewFunction)
+
+// Поулчить все новые функции
+app.get("/senior/developer/get/function", checkAuthorization, getNewFunction)
+
+// Поулчить одну новую функции
+app.get("/senior/developer/get/function/:idFunction", checkAuthorization, getOneFunction)
 
 
 // !!!!!!!!!!!!!Потом сделать

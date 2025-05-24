@@ -22,6 +22,7 @@ function ListApplicationsDeveloper({variant}) {
     useEffect(()=>{
         dispatchApplications(fetchAllApplication())
         dispatchApplications(fetchUserMe())
+
         console.log(applications)
         console.log("хуятина :)ggggggggcbvbcbcvbcbbcbcbcbvxcxcx", user)
     },[])
@@ -40,12 +41,7 @@ function ListApplicationsDeveloper({variant}) {
                     .map((obj) => (
                         <Link 
                         key={obj._id}
-                        to={{
-                            pathname: `/application/page/senior/${obj._id}`,
-                            state: { 
-                                "senior": true
-                            }
-                        }}
+                        to={`/application/page/senior/${obj._id}?senior=true&newFunction=false`}
                         onClick={()=>{setStatus(obj._id,obj.status, "Просмотрено")}}
                         >
                         <ApplicationComponentDeveloper 

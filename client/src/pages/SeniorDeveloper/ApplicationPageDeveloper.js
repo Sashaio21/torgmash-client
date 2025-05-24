@@ -19,7 +19,6 @@ function ApplicationPageDeveloper() {
     const { senior } = location.state || {};
     const user = useSelector(state => state.user)
     const [active, setActive] = useState(false)
-    const [responsibleApp, setResponsibleApp] = useState(false)
     const [oneApplication, setOneApplication] = useState(false)
 
 
@@ -46,6 +45,7 @@ function ApplicationPageDeveloper() {
                 className="row"
                 style={{justifyContent: "space-between"}}
             >
+            
                 <h2>{oneApplication.title}</h2>
                 <div>{oneApplication.status}</div>
             </div>

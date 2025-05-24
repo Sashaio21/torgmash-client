@@ -4,6 +4,7 @@ import OneTask from './OneTask.js';
 import axios from '../axios.js'
 import { useEffect, useState } from 'react';
 import OneTaskProgrammer from './OneTaskProgrammer.js';
+import GanttChart from './GanttChart.js';
 
 
 function ListTasksProgrammer({idApplication}) {
@@ -35,6 +36,7 @@ function ListTasksProgrammer({idApplication}) {
                     </div>            
                 )}
             </div>
+            <button onClick={()=>console.log(listTasksForSenior)}>test</button>
         </div>
     )
 }

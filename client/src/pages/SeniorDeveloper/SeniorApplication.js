@@ -8,6 +8,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchAllApplication } from '../../redux/slices/employeeSlices';
 import { fetchUserMe } from '../../redux/slices/userSlices';
+import { useSearchParams } from 'react-router-dom';
+import NewFunctionPage from './NewFunctionPage';
+import UpdatePage from './UpdatePage';
 
 function SeniorApplication() {
     const dispatch = useDispatch();
@@ -17,13 +20,17 @@ function SeniorApplication() {
     const user = useSelector(state=>state.user)
     const {idApplication} = useParams()
         
+    const [searchParams] = useSearchParams();
+    const senior = searchParams.get('senior');
+    const newFunction = searchParams.get('newFunction');
+
+
     const handleChange = (event, newValue) => {
         setActiveTab(newValue);
     };
 
     const test = ()=>{
-        console.log(applications.applications.applications.find(app => app._id === idApplication).applicant)
-        console.log(user.user.user._id)
+        console.log(newFunction)
     }
 
     useEffect(() => {
@@ -51,19 +58,25 @@ function SeniorApplication() {
 
     return (
         <div> 
-            {visibleTabs ? 
+            {visibleTabs || !newFunction ? 
             <Tabs value={activeTab} onChange={handleChange} centered>
                 <Tab label="Заявка" />
                 <Tab label="Задачи" />
+                {!newFunction ? <Tab label="Обновление" /> :<></>}
             </Tabs> :
             <>
-            </>
+            </> 
             }
             <TabPanel value={activeTab} index={0}>
-                <ApplicationPageDeveloper/>
+                {!newFunction ? <NewFunctionPage/>
+                :<ApplicationPageDeveloper/>
+                }
             </TabPanel>
             <TabPanel value={activeTab} index={1}>
                 <AddTask idApplication={idApplication}/>
+            </TabPanel>
+            <TabPanel value={activeTab} index={2}>
+                <UpdatePage/>
             </TabPanel>
             <button onClick={()=>{test()}}>gfdfg</button>
 

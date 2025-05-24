@@ -16,6 +16,7 @@ import AddTask from './pages/SeniorDeveloper/AddTask';
 import MainDeveloper from './pages/SeniorDeveloper/MainDeveloper'
 import Header from './components/Header';
 import SeniorApplication from './pages/SeniorDeveloper/SeniorApplication';
+import CreateNewFunction from './pages/SeniorDeveloper/CreateNewFunction';
 import Redirection from './pages/Redirection';
 import ApplicationPageDeveloper from './pages/SeniorDeveloper/ApplicationPageDeveloper';
 
@@ -53,6 +54,7 @@ function App() {
               <Route path='/add/task' element={<AddTask/>}/>
               <Route path='/developer' element={<MainDeveloper/>}/>
               <Route path='/application/page/senior/:idApplication' element={<SeniorApplication/>}/>
+              <Route path='/application/create' element={<CreateNewFunction/>}/>
           </Routes>
         </div>
     </div>

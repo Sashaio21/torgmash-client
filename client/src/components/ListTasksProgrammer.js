@@ -25,18 +25,19 @@ function ListTasksProgrammer({idApplication}) {
         <div>
             <div className='applications col'>
                {listTasksForSenior.map((obj)=>
-                    <div >
+                    <Link  to={`/task/${obj._id}?title=${encodeURIComponent(obj.titleTask)}&description=${encodeURIComponent(obj.descriptionTask)}&status=${obj.status}&deadline=${obj.deadline}&idUser=${obj.executor}`}>
                         <OneTaskProgrammer
                             title={obj.titleTask}
                             desription={obj.descriptionTask}
                             status={obj.status}
                             deadline={obj.deadline}
                             idApplication={obj._id}
+                            setListTasksForSenior={setListTasksForSenior}
                         /> 
-                    </div>            
+                    </Link>            
                 )}
             </div>
-            <button onClick={()=>console.log(listTasksForSenior)}>test</button>
+
         </div>
     )
 }

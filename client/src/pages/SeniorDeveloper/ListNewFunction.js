@@ -30,7 +30,6 @@ function ListNewFunction({variant}) {
     
     return(
         <div>
-            <button onClick={()=>console.log(newFunctions.data.allFunction)}>test</button>
             {Array.isArray(newFunctions?.data?.allFunction) && newFunctions.data.allFunction.length > 0 && user ? (
                 <div className='applications col'>
                     {newFunctions.data.allFunction.map((obj) => (

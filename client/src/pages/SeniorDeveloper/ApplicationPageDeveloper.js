@@ -1,63 +1,82 @@
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from '../../axios.js';
-import '../../styles/global.css'
-import { Link, useParams, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { fetchUserMe } from '../../redux/slices/userSlices.js';
-import { useNavigate } from 'react-router-dom';
-import {Card, Button} from '@mui/material'
-import { setStatus } from '../../utilites/globalUtilites.js';
-import { useSelector } from 'react-redux';
+import '../../styles/global.css';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Card, CardContent, Typography, Chip, Box } from '@mui/material';
 import { setApplicant } from '../../utilites/globalUtilites.js';
-import ComponentResponsible from '../../components/ComponentResponsible.js';
 
 function ApplicationPageDeveloper() {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const {idApplication} = useParams()
-    const location = useLocation();
-    const { senior } = location.state || {};
-    const user = useSelector(state => state.user)
-    const [active, setActive] = useState(false)
-    const [oneApplication, setOneApplication] = useState(false)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { idApplication } = useParams();
+  const location = useLocation();
+  const user = useSelector(state => state.user);
 
+  const [oneApplication, setOneApplication] = useState(null);
 
+  useEffect(() => {
+    axios.get(`/employee/application/one/${idApplication}`)
+      .then((data) => {
+        const app = data.data.oneApplication[0];
+        setOneApplication(app);
+      });
+  }, [idApplication]);
 
-    useEffect(()=>{
-        axios.get(`/employee/application/one/${idApplication}`)
-        .then((data)=>{
-            console.log(data.data.oneApplication[0])
-            setOneApplication(data.data.oneApplication[0])
-            if (data.data.oneApplication[0].status == "Не просмотрено") {
-                setActive(true)
-            }
-          
-        })
-        console.log("senior", senior)
-    },[])
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Не просмотрено':
+        return 'warning';
+      case 'Активно':
+        return 'info';
+      case 'Выполнено':
+        return 'success';
+      default:
+        return 'default';
+    }
+  };
 
+  if (!oneApplication) return <Typography>Загрузка...</Typography>;
 
-    return (
-        <div 
-        className="col"
-        style={{gap: "20px"}}>
-            <div 
-                className="row"
-                style={{justifyContent: "space-between"}}
-            >
-            
-                <h2>{oneApplication.title}</h2>
-                <div>{oneApplication.status}</div>
-            </div>
-            <p>{oneApplication.description}</p>
-            {oneApplication.status == "Активно"?
-            <div></div>:
-            <Button onClick={()=>{setApplicant(idApplication, oneApplication.status,"Активно", navigate, user.user.user._id)}}>
+  return (
+    <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
+      <Card sx={{ width: '100%', maxWidth: 800, p: 2 }}>
+        <CardContent>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h5" fontWeight="bold">
+              {oneApplication.title}
+            </Typography>
+            <Chip label={oneApplication.status} color={getStatusColor(oneApplication.status)} />
+          </Box>
+
+          <Box mb={1}>
+            <Chip label={`Срочность: ${oneApplication.urgency}`} variant="outlined" />
+          </Box>
+
+          <Typography variant="body1" mb={3}>
+            {oneApplication.description}
+          </Typography>
+
+          {oneApplication.status !== 'Активно' && (
+            <Box mt={2}>
+              <Button
+                variant="contained"
+                onClick={() => setApplicant(
+                  idApplication,
+                  oneApplication.status,
+                  "Активно",
+                  navigate,
+                  user.user.user._id
+                )}
+              >
                 Перейти к выполнению
-            </Button>
-            }
-        </div>
-    );
-};
+              </Button>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+    </Box>
+  );
+}
 
 export default ApplicationPageDeveloper;

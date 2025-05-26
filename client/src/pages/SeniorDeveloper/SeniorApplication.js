@@ -11,6 +11,7 @@ import { fetchUserMe } from '../../redux/slices/userSlices';
 import { useSearchParams } from 'react-router-dom';
 import NewFunctionPage from './NewFunctionPage';
 import UpdatePage from './UpdatePage';
+import EmployeeInfo from '../../components/EmployeeInfo';
 
 function SeniorApplication() {
     const dispatch = useDispatch();
@@ -78,7 +79,14 @@ function SeniorApplication() {
             <TabPanel value={activeTab} index={2}>
                 <UpdatePage/>
             </TabPanel>
-            <button onClick={()=>{test()}}>gfdfg</button>
+            <h4 style={{marginTop:"25px"}}>Отпраивл заявку</h4>
+            {foundApplication && foundApplication.applicant ? (
+            <EmployeeInfo idEmployee={foundApplication.applicant} />
+            ) : (
+            <div>Загрузка данных сотрудника...</div> // или пусто
+            )}
+
+
 
         </div>
     );

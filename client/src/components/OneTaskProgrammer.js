@@ -5,10 +5,17 @@ import ru from 'date-fns/locale/ru';
 import parseISO from 'date-fns/parseISO';
 import axios from '../axios'
 
-function OneTaskProgrammer({title, desription, status, deadline, idApplication}) {
+function OneTaskProgrammer({title, desription, status, deadline, idApplication, setListTasksForSenior}) {
 
     const deleteTask = () => {
         axios.delete(`senior/developer/task/${idApplication}`)
+        axios.get('/senior/programmer/all/task', 
+            {"aplication" : idApplication}
+        )
+        .then((data)=>{
+            console.log(data.data.allTasks)
+            setListTasksForSenior(data.data.allTasks)
+        })
     }
 
     // Проверяем, является ли deadline строкой и преобразуем в дату

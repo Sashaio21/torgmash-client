@@ -4,10 +4,15 @@ import { useState } from "react";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import axios from "../axios";
+import ProgrammerTaskViewer from "./ProgrammerTaskViewer";
+import GanttChart from "./GanttChart";
 
 function AddTaskModal({ isOpen, onClose, allProgrammer, idApplication }) {
   const { control, handleSubmit, register, formState: { errors } } = useForm();
   const [date, setDate] = useState(null);
+  const [value, setValue] = useState()
+  const [programmer, setProgrammer] = useState(false)
+  const [tasks, setTasks] = useState(false)
 
   const listProgrammer = ["Dima", "Sascha", "Igor"];
 
@@ -46,7 +51,7 @@ function AddTaskModal({ isOpen, onClose, allProgrammer, idApplication }) {
             top: "10%",
             left: "50%",
             transform: "translate(-50%, 0)",
-            width: "40%",
+            width: "60%",
             background: "white",
             borderRadius: "8px",
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
@@ -79,6 +84,19 @@ function AddTaskModal({ isOpen, onClose, allProgrammer, idApplication }) {
           <Select
             {...register("executor")}
             defaultValue="" // Укажите начальное значение, если нужно
+            onChange={(e) => {
+            const selectedId = e.target.value;
+            setValue("executor", selectedId); // если хотите вручную обновить
+            console.log("Выбрано:", selectedId);
+
+            axios.get(`/senior/programmer/all/task/${selectedId}`)
+            .then((res) => {
+              console.log(res.data.allTasks)
+              setTasks(res.data.allTasks)
+            })
+
+            // можно вызвать axios-запрос здесь
+          }}
           >
             {allProgrammer && allProgrammer.length > 0 ? (
               allProgrammer.map((obj, index) => (
@@ -118,6 +136,11 @@ function AddTaskModal({ isOpen, onClose, allProgrammer, idApplication }) {
           {errors.deadline && (
             <p style={{ color: "red" }}>{errors.deadline.message}</p>
           )}
+          {tasks !== false && <GanttChart tasks={tasks} width="90%" height={200}/>}
+          <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
 
           {/* Кнопки */}
           <div className="row">
@@ -126,6 +149,8 @@ function AddTaskModal({ isOpen, onClose, allProgrammer, idApplication }) {
             {/* <Button onClick={()=>{test()}}>Хуй</Button> */}
           </div>
         </form>
+        
+        
       </Card>
     </Modal>
   );

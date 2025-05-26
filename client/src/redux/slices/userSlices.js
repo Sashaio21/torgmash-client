@@ -13,10 +13,19 @@ export const fetchUserMe = createAsyncThunk("/user/fetchUserMe", async () => {
   return data;
 });
 
-export const fetchAuth = createAsyncThunk("/user/fetchauth", async (params) => {
-  const { data } = await axios.post("/user/login", params);
-  window.localStorage.setItem('token', data.token);
-  return data;
+export const fetchAuth = createAsyncThunk("/user/fetchauth", async (params, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post("/user/login", params);
+
+    if (data?.token) {
+      window.localStorage.setItem('token', data.token);
+      return data;
+    } else {
+      return rejectWithValue("Authentication failed: no token received.");
+    }
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || "Login failed.");
+  }
 });
 
 // Начальное состояние
@@ -30,7 +39,14 @@ const initialState = {
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  // userSlice.js
+  reducers: {
+    logout(state) {
+      state.user = null;
+      state.status = 'idle';
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Экшен авторизации
@@ -64,3 +80,5 @@ const userSlice = createSlice({
 });
 
 export const userReducer = userSlice.reducer;
+// ✅ Экспорт actions
+export const { logout } = userSlice.actions;

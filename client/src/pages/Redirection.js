@@ -3,11 +3,20 @@ import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
 function Redirection() {
-    const {user, message, error} = useSelector((state) => state.user)
-    const navigate = useNavigate()
+    const { user } = useSelector((state) => state.user);
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
 
-    useEffect(()=>{
+        // Клиентская проверка админа
+        if (token === 'fake-admin-token' && role === 'admin') {
+            navigate('/user/register');
+            return;
+        }
+
+        // Если пользователь из redux-стейта и у него есть должность
         if (user && user.user && user.user.jobTitle) {
             switch (user.user.jobTitle.nameJobTitle) {
                 case "Старший разработчик":
@@ -20,15 +29,16 @@ function Redirection() {
                     navigate('/employee');
             }
         } else {
-            navigate('/auth')
+            // Если ничего не найдено — на страницу авторизации
+            navigate('/auth');
         }
-    },[])
+    }, []);
 
     return (
         <div>
-            Переадрессация
+            Переадресация...
         </div>
-    )
+    );
 }
 
-export default  Redirection
+export default Redirection;

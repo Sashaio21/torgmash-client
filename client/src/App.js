@@ -19,6 +19,8 @@ import SeniorApplication from './pages/SeniorDeveloper/SeniorApplication';
 import CreateNewFunction from './pages/SeniorDeveloper/CreateNewFunction';
 import Redirection from './pages/Redirection';
 import ApplicationPageDeveloper from './pages/SeniorDeveloper/ApplicationPageDeveloper';
+import Register from './pages/UsersPage/Register';
+import HR from './pages/UsersPage/HR';
 
 function App() { 
   const { user, status, error } = useSelector((state) => state.user);
@@ -55,6 +57,7 @@ function App() {
               <Route path='/developer' element={<MainDeveloper/>}/>
               <Route path='/application/page/senior/:idApplication' element={<SeniorApplication/>}/>
               <Route path='/application/create' element={<CreateNewFunction/>}/>
+              <Route path='/user/register' element={<HR/>}/>
           </Routes>
         </div>
     </div>

@@ -1,66 +1,63 @@
 import '../styles/global.css'
 import { Button } from '@mui/material'
 import { useState, useEffect } from 'react'
-import {styled} from '@mui/material';
+import { styled } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUserMe } from '../redux/slices/userSlices';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import axios from '../axios.js';
-
+import { fetchUserMe, logout } from '../redux/slices/userSlices';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CustomButton = styled(Button)({
-    color: "#76cb95 ",
+    color: "#76cb95",
 });
 
+function Header() {
+    const navigate = useNavigate();
+    const dispatchAuthMe = useDispatch();
+    const { user } = useSelector((state) => state.user);
 
-function Header(){
-    const navigate = useNavigate()
-    const [user1, setUser1] = useState(false)
-    const { user, status, error } = useSelector((state) => state.user);
-    const dispatchAuthMe = useDispatch()
+    // Вычисляем isLoggedIn на основе redux и localStorage **на каждом рендере**
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
 
-    
-
-    useEffect(()=>{
-        console.log("header",user)
-    }, [])
+    const isLoggedIn = Boolean((user && user.user) || token || role);
 
     const deleteToken = () => {
-        window.localStorage.removeItem('token');
-        dispatchAuthMe(fetchUserMe()); // Перезапрашиваем пользователя
-        setUser1(false);
-        // navigate('/')
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+
+        dispatchAuthMe(logout());
+        // Здесь не нужно менять локальный isLoggedIn, он пересчитается при рендере
+
+        navigate('/auth');
     };
-    
-    const test = () => {
-        console.log(user)
-    }
+
+    const goToLogin = () => {
+        navigate('/auth');
+    };
 
     return (
         <header>
             <div className='row container' style={{justifyContent: "space-between", alignItems: "center", height:"100%"}}>
-                <Link to={'/'}
-                    className='row' 
-                    style={{gap: "10px"}}
-                >
-                    <img className='image' alt="Some text"></img>
-                    <p >На главную</p>
+                <Link to={'/'} className='row' style={{gap: "10px"}}>
+                    <img className='image' alt="Some text" />
+                    <p>На главную</p>
                 </Link>
-                {user && user.user ? (
+
+                {isLoggedIn ? (
                     <div className='row' style={{alignSelf:"center", gap: "10px"}}>
                         <div className='nameEmployee' style={{alignSelf:"center", gap: "10px"}}>
-                            {user.user.numberPassport}
+                            {user && user.user ? user.user.numberPassport : 'Отдел кадров'}
                         </div>
                         <CustomButton onClick={deleteToken}>Выйти</CustomButton>
                     </div>
                 ) : (
                     <div className='row' style={{alignSelf:"center", gap: "10px"}}>
-                        <CustomButton onClick={test}>Войти</CustomButton>
+                        <CustomButton onClick={goToLogin}>Войти</CustomButton>
                     </div>
                 )}
-
             </div>
         </header>
-    )
+    );
 }
-export default Header 
+
+export default Header;

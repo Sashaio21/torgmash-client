@@ -47,8 +47,8 @@ function CreateNewFunction(){
                     className='row'
                     style={{gap: "20px"}}
                 >
-                    <Button >Отмена</Button>
-                    <Button type="onsubmit">Отправить</Button>
+                    <Button variant="contained" color="error" >Отмена</Button>
+                    <Button type="onsubmit" variant="contained">Отправить</Button>
                 </div>
             </div>
             </form>
